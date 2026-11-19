@@ -1,8 +1,6 @@
+import { analytics, crashlytics, firestore, storage } from "../helpers/firebase";
 import * as Location from "expo-location";
-import analytics from "@react-native-firebase/analytics";
-import crashlytics from "@react-native-firebase/crashlytics";
-import firestore from "@react-native-firebase/firestore";
-import storage from "@react-native-firebase/storage";
+
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
 import CustomMapStyles from "../constants/CustomMapStyles";
@@ -46,7 +44,7 @@ import { FIRESTORE_COLLECTION } from "@env";
 
 export default function NewEventScreen({ navigation, route }: any) {
   const colorScheme: ColorSchemeName = useColorScheme();
-  const dispatch: Dispatch<any> = useDispatch<Dispatch<any>>();
+  const dispatch: any = useDispatch();
   const internetState: NetInfoState = useNetInfo();
   const mapRef: MutableRefObject<null> = useRef<null>(null);
   const [dateTimeError, setDateTimeError] = useState<string>("");
@@ -358,7 +356,7 @@ export default function NewEventScreen({ navigation, route }: any) {
     navigation.goBack();
   };
 
-  const Map: () => JSX.Element = () => (
+  const Map: () => React.JSX.Element = () => (
     <View style={styles.centered}>
       <MapView
         customMapStyle={CustomMapStyles.CUSTOM_MAP_STYLES}

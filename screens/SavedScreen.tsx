@@ -1,5 +1,6 @@
-import analytics from "@react-native-firebase/analytics";
-import crashlytics from "@react-native-firebase/crashlytics";
+
+
+import { analytics, crashlytics } from "../helpers/firebase";
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
 import EventItem from "../components/EventItem";
@@ -18,7 +19,7 @@ import { View } from "../components/Themed";
 
 export default function SavedScreen({ navigation, route }: any) {
   const colorScheme: ColorSchemeName = useColorScheme();
-  const dispatch: Dispatch<any> = useDispatch<Dispatch<any>>();
+  const dispatch: any = useDispatch();
   const internetState: NetInfoState = useNetInfo();
   const savedEvents: Event[] = useSelector(
     (state: any) => state.events.savedEvents

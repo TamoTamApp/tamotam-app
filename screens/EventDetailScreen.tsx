@@ -62,7 +62,7 @@ export default function EventDetailScreen({ navigation, route }: any) {
     );
   }
 
-  const Map: () => JSX.Element = () => (
+  const Map: () => React.JSX.Element = () => (
     <View style={styles.container}>
       <MapView
         customMapStyle={CustomMapStyles.CUSTOM_MAP_STYLES}

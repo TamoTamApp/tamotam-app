@@ -1,5 +1,6 @@
-import analytics from "@react-native-firebase/analytics";
-import crashlytics from "@react-native-firebase/crashlytics";
+
+
+import { analytics, crashlytics } from "../../helpers/firebase";
 import { deleteSavedEvent, fetchSavedEvents, insertSavedEvent } from "../../helpers/sqlite_db";
 import { Alert } from "react-native";
 import { Event } from "../../interfaces/event";

@@ -16,5 +16,5 @@ export default {
     },
   },
   NotFound: "*",
-  prefixes: [Linking.makeUrl("/")],
+  prefixes: [Linking.createURL("/")],
 };
