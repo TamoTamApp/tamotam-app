@@ -5,13 +5,8 @@
     "version": "0.9.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": ["myapp", "com.tamotam.application"],
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -20,7 +15,32 @@
       "supportsTablet": true,
       "buildNumber": "0.9.5",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "bundleIdentifier": "com.tamotam.application"
+      "bundleIdentifier": "com.tamotam.application",
+      "appleTeamId": "9D3QHQ7CMS",
+      "deploymentTarget": "16.4",
+      "entitlements": {
+        "aps-environment": "development"
+      },
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSExceptionDomains": {
+            "localhost": {
+              "NSExceptionAllowsInsecureHTTPLoads": true
+            }
+          }
+        },
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["myapp", "com.tamotam.application"]
+          },
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.425706026242-30a8dpl3du56blco2mdcnqtc3icq5gdf"
+            ]
+          }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -29,7 +49,17 @@
       },
       "googleServicesFile": "./google-services.json",
       "package": "com.tamotam.application",
-      "versionCode": 95
+      "versionCode": 95,
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.VIBRATE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
@@ -37,7 +67,39 @@
     "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/crashlytics",
-      "@react-native-firebase/perf"
+      "@react-native-firebase/perf",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "dynamic"
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to access your location",
+          "locationAlwaysPermission": "Allow $(PRODUCT_NAME) to access your location",
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to access your location"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone"
+        }
+      ]
     ],
     "extra": {
       "eas": {

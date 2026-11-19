@@ -1,6 +1,7 @@
-import analytics from '@react-native-firebase/analytics';
+
+import { analytics, crashlytics } from "../../../helpers/firebase";
 import axios, { AxiosResponse } from 'axios';
-import crashlytics from '@react-native-firebase/crashlytics';
+
 import readItemFromStorage from '../../../common/readItemFromStorage';
 import writeItemToStorage from '../../../common/writeItemToStorage';
 import {

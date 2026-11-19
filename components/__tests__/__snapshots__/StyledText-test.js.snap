@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`renders correctly 1`] = `
+<Text
+  style={
+    [
+      {
+        "color": "#b30000",
+      },
+      [
+        undefined,
+        {
+          "fontFamily": "space-mono",
+        },
+      ],
+    ]
+  }
+>
+  Snapshot test!
+</Text>
+`;

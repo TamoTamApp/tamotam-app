@@ -1,75 +1,62 @@
 import * as SQLite from "expo-sqlite";
-import analytics from "@react-native-firebase/analytics";
-import crashlytics from "@react-native-firebase/crashlytics";
-import { SQLError, SQLResultSet, SQLTransaction, WebSQLDatabase } from "expo-sqlite";
+import { analytics, crashlytics } from "./firebase";
 
-const sqlite_db: WebSQLDatabase = SQLite.openDatabase("savedEvents.db");
+const CREATE_SAVED_EVENTS_TABLE = `CREATE TABLE IF NOT EXISTS savedEvents (id INTEGER PRIMARY KEY NOT NULL, date REAL NOT NULL, description TEXT, firestoreDocumentId TEXT, imageUrl TEXT, isUserEvent INTEGER NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL, title TEXT)`;
 
-export const init: () => Promise<unknown> = () => {
-  const promise: Promise<unknown> = new Promise((resolve: (value: unknown) => void, reject: (reason?: any) => void) => {
-    sqlite_db.transaction((SQLiteTransaction: SQLTransaction) => {
-      SQLiteTransaction.executeSql(
-        `CREATE TABLE IF NOT EXISTS savedEvents (id INTEGER PRIMARY KEY NOT NULL, date REAL NOT NULL, description TEXT, firestoreDocumentId TEXT, imageUrl TEXT, isUserEvent INTEGER NOT NULL, latitude REAL NOT NULL, longitude REAL NOT NULL, title TEXT)`,
-        [],
-        (transaction: SQLTransaction, result: SQLResultSet) => {
-          resolve(result);
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> init -> (transaction, result), transaction: " + transaction,
-          });
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> init -> (transaction, result), result: " + result,
-          });
-        },
-        (transaction: SQLTransaction, error: SQLError | any): void | any => {
-          reject(error);
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> init -> (transaction, error), transaction: " + transaction,
-          });
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> init -> (transaction, error), error: " + error,
-          });
-          crashlytics().recordError(error);
-        }
-      );
+let databasePromise: Promise<SQLite.SQLiteDatabase> | null = null;
+
+function getDatabase(): Promise<SQLite.SQLiteDatabase> {
+  if (!databasePromise) {
+    databasePromise = (async () => {
+      const database = await SQLite.openDatabaseAsync("savedEvents.db");
+      await database.execAsync(CREATE_SAVED_EVENTS_TABLE);
+      return database;
+    })();
+  }
+  return databasePromise;
+}
+
+export const init: () => Promise<unknown> = async () => {
+  try {
+    const result = await getDatabase();
+    analytics().logEvent("custom_log", {
+      description: "--- Analytics: helpers -> sqlite_db -> init -> (transaction, result), result: " + result,
     });
-  });
-
-  return promise;
+    return result;
+  } catch (error: unknown) {
+    analytics().logEvent("custom_log", {
+      description: "--- Analytics: helpers -> sqlite_db -> init -> (transaction, error), error: " + error,
+    });
+    if (error instanceof Error) {
+      crashlytics().recordError(error);
+    }
+    throw error;
+  }
 };
 
-export const deleteSavedEvent: (id: number | string) => Promise<unknown> = (
+export const deleteSavedEvent: (id: number | string) => Promise<unknown> = async (
   id: number | string
 ) => {
-  const promise: Promise<unknown> = new Promise((resolve: (value: unknown) => void, reject: (reason?: any) => void) => {
-    sqlite_db.transaction((SQLiteTransaction: SQLTransaction) => {
-      SQLiteTransaction.executeSql(`DELETE FROM savedEvents WHERE id = ?;`, [id],
-        (transaction: SQLTransaction, result: SQLResultSet) => {
-          resolve(result);
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> deleteSavedEvent -> (transaction, result), transaction: " + transaction,
-          });
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> deleteSavedEvent -> (transaction, result), result: " + result,
-          });
-        },
-        (transaction: SQLTransaction, error: SQLError | any): void | any => {
-          reject(error);
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> deleteSavedEvent -> (transaction, error), transaction: " + transaction,
-          });
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> deleteSavedEvent -> (transaction, error), error: " + error,
-          });
-          crashlytics().recordError(error);
-        })
-    })
-  });
-
-  return promise;
+  try {
+    const database = await getDatabase();
+    const result = await database.runAsync(`DELETE FROM savedEvents WHERE id = ?;`, [id]);
+    analytics().logEvent("custom_log", {
+      description: "--- Analytics: helpers -> sqlite_db -> deleteSavedEvent -> (transaction, result), result: " + result,
+    });
+    return result;
+  } catch (error: unknown) {
+    analytics().logEvent("custom_log", {
+      description: "--- Analytics: helpers -> sqlite_db -> deleteSavedEvent -> (transaction, error), error: " + error,
+    });
+    if (error instanceof Error) {
+      crashlytics().recordError(error);
+    }
+    throw error;
+  }
 };
 
 export const insertSavedEvent:
-  (date: Date, description: string, firestoreDocumentId: string | undefined, imageUrl: string, isUserEvent: boolean, latitude: number, longitude: number, title: string) => Promise<unknown> = (
+  (date: Date, description: string, firestoreDocumentId: string | undefined, imageUrl: string, isUserEvent: boolean, latitude: number, longitude: number, title: string) => Promise<unknown> = async (
     date: Date,
     description: string,
     firestoreDocumentId: string | undefined,
@@ -79,65 +66,43 @@ export const insertSavedEvent:
     longitude: number,
     title: string
   ) => {
-    const promise: Promise<unknown> = new Promise((resolve: (value: unknown) => void, reject: (reason?: any) => void) => {
-      sqlite_db.transaction((SQLiteTransaction: SQLTransaction) => {
-        SQLiteTransaction.executeSql(
-          `INSERT INTO savedEvents (date, description, firestoreDocumentId, imageUrl, isUserEvent, latitude, longitude, title) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          [String(date), description, firestoreDocumentId ? firestoreDocumentId : null, imageUrl, Number(isUserEvent), latitude, longitude, title],
-          (transaction: SQLTransaction, result: SQLResultSet) => {
-            resolve(result);
-            analytics().logEvent("custom_log", {
-              description: "--- Analytics: helpers -> sqlite_db -> insertSavedEvent -> (transaction, result), transaction: " + transaction,
-            });
-            analytics().logEvent("custom_log", {
-              description: "--- Analytics: helpers -> sqlite_db -> insertSavedEvent -> (transaction, result), result: " + result,
-            });
-          },
-          (transaction: SQLTransaction, error: SQLError | any): void | any => {
-            reject(error);
-            analytics().logEvent("custom_log", {
-              description: "--- Analytics: helpers -> sqlite_db -> insertSavedEvent -> (transaction, error), transaction: " + transaction,
-            });
-            analytics().logEvent("custom_log", {
-              description: "--- Analytics: helpers -> sqlite_db -> insertSavedEvent -> (transaction, error), error: " + error,
-            });
-            crashlytics().recordError(error);
-          }
-        );
+    try {
+      const database = await getDatabase();
+      const result = await database.runAsync(
+        `INSERT INTO savedEvents (date, description, firestoreDocumentId, imageUrl, isUserEvent, latitude, longitude, title) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [String(date), description, firestoreDocumentId ? firestoreDocumentId : null, imageUrl, Number(isUserEvent), latitude, longitude, title]
+      );
+      analytics().logEvent("custom_log", {
+        description: "--- Analytics: helpers -> sqlite_db -> insertSavedEvent -> (transaction, result), result: " + result,
       });
-    });
-
-    return promise;
+      return result;
+    } catch (error: unknown) {
+      analytics().logEvent("custom_log", {
+        description: "--- Analytics: helpers -> sqlite_db -> insertSavedEvent -> (transaction, error), error: " + error,
+      });
+      if (error instanceof Error) {
+        crashlytics().recordError(error);
+      }
+      throw error;
+    }
   };
 
-export const fetchSavedEvents: () => Promise<unknown> = () => {
-  const promise: Promise<unknown> = new Promise((resolve: (value: unknown) => void, reject: (reason?: any) => void) => {
-    sqlite_db.transaction((SQLiteTransaction: SQLTransaction) => {
-      SQLiteTransaction.executeSql(
-        "SELECT * FROM savedEvents",
-        [],
-        (transaction: SQLTransaction, result: SQLResultSet) => {
-          resolve(result);
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> fetchSavedEvents -> (transaction, result), transaction: " + transaction,
-          });
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> fetchSavedEvents -> (transaction, result), result: " + result,
-          });
-        },
-        (transaction: SQLTransaction, error: SQLError | any): void | any => {
-          reject(error);
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> fetchSavedEvents -> (transaction, error), transaction: " + transaction,
-          });
-          analytics().logEvent("custom_log", {
-            description: "--- Analytics: helpers -> sqlite_db -> fetchSavedEvents -> (transaction, error), error: " + error,
-          });
-          crashlytics().recordError(error);
-        }
-      );
+export const fetchSavedEvents: () => Promise<unknown> = async () => {
+  try {
+    const database = await getDatabase();
+    const rows = await database.getAllAsync("SELECT * FROM savedEvents");
+    const result = { rows: { _array: rows } };
+    analytics().logEvent("custom_log", {
+      description: "--- Analytics: helpers -> sqlite_db -> fetchSavedEvents -> (transaction, result), result: " + result,
     });
-  });
-
-  return promise;
+    return result;
+  } catch (error: unknown) {
+    analytics().logEvent("custom_log", {
+      description: "--- Analytics: helpers -> sqlite_db -> fetchSavedEvents -> (transaction, error), error: " + error,
+    });
+    if (error instanceof Error) {
+      crashlytics().recordError(error);
+    }
+    throw error;
+  }
 };

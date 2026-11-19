@@ -1,7 +1,7 @@
+import { analytics, crashlytics } from "../helpers/firebase";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import analytics from "@react-native-firebase/analytics";
-import crashlytics from "@react-native-firebase/crashlytics";
+
 import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";

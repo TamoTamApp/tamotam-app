@@ -1,8 +1,14 @@
-import analytics from "@react-native-firebase/analytics";
+
+import { analytics } from "../helpers/firebase";
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
 import React from "react";
-import { Text as DefaultText, View as DefaultView } from "react-native";
+import {
+  Text as DefaultText,
+  View as DefaultView,
+  TextProps as DefaultTextProps,
+  ViewProps as DefaultViewProps,
+} from "react-native";
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -26,8 +32,8 @@ type ThemeProps = {
   lightColor?: string;
 };
 
-export type TextProps = ThemeProps & DefaultText["props"];
-export type ViewProps = ThemeProps & DefaultView["props"];
+export type TextProps = ThemeProps & DefaultTextProps;
+export type ViewProps = ThemeProps & DefaultViewProps;
 
 // TODO: For now it's not being used, check out how text could be changed not manually, but instead using this function.
 export function Text(props: TextProps) {

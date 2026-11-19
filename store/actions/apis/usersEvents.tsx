@@ -1,8 +1,8 @@
-import analytics from '@react-native-firebase/analytics';
-import crashlytics from '@react-native-firebase/crashlytics';
-import firestore from '@react-native-firebase/firestore';
+
+
+import { analytics, crashlytics, firestore, storage } from "../../../helpers/firebase";
 import readItemFromStorage from '../../../common/readItemFromStorage';
-import storage from "@react-native-firebase/storage";
+
 import writeItemToStorage from '../../../common/writeItemToStorage';
 import { Event } from '../../../interfaces/event';
 import {

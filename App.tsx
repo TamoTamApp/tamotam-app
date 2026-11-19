@@ -1,13 +1,13 @@
 import "react-native-gesture-handler";
-import analytics from "@react-native-firebase/analytics";
-import crashlytics from "@react-native-firebase/crashlytics";
+import { analytics, crashlytics } from "./helpers/firebase";
+
 import eventsReducer from "./store/reducers/events";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Colors from "./constants/Colors";
 import React, { useEffect } from "react";
 import Navigation from "./navigation";
-import ReduxThunk from "redux-thunk";
+import { thunk as ReduxThunk } from "redux-thunk";
 import { applyMiddleware, createStore, combineReducers } from "redux";
 import { init } from "./helpers/sqlite_db";
 import { useNetInfo, NetInfoState } from "@react-native-community/netinfo";
@@ -41,7 +41,7 @@ const rootReducer = combineReducers({
   events: eventsReducer,
 });
 
-const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+const store = (createStore as any)(rootReducer, applyMiddleware(ReduxThunk));
 
 export default function App() {
   const colorScheme: ColorSchemeName = useColorScheme();

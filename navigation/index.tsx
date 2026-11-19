@@ -1,4 +1,5 @@
-import analytics from "@react-native-firebase/analytics";
+
+import { analytics } from "../helpers/firebase";
 import BottomTabNavigator from "./BottomTabNavigator";
 import EditEventScreen from "../screens/EditEventScreen";
 import EventDetailScreen from "../screens/EventDetailScreen";
@@ -20,12 +21,12 @@ export default function Navigation({
 }: {
   colorScheme: ColorSchemeName;
 }) {
-  const routeNameRef: React.MutableRefObject<undefined> = useRef();
-  const navigationRef: any = useRef();
+  const routeNameRef = useRef<string | undefined>(undefined);
+  const navigationRef = useRef<any>(null);
 
   return (
     <NavigationContainer
-      linking={LinkingConfiguration}
+      linking={LinkingConfiguration as any}
       ref={navigationRef}
       onReady={() => {
         routeNameRef.current = navigationRef.current.getCurrentRoute().name;

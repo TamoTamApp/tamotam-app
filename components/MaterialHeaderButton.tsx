@@ -1,18 +1,13 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import {
   HeaderButton,
   HeaderButtonProps,
 } from "react-navigation-header-buttons";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const MaterialHeaderButton = (
-  props: JSX.IntrinsicAttributes &
-    JSX.IntrinsicClassAttributes<HeaderButton> &
-    Readonly<HeaderButtonProps> &
-    Readonly<{ children?: ReactNode }>
-) => {
+const MaterialHeaderButton = (props: HeaderButtonProps) => {
   return (
-    <HeaderButton IconComponent={MaterialIcons} iconSize={23} {...props} />
+    <HeaderButton IconComponent={MaterialIcons as HeaderButtonProps["IconComponent"]} iconSize={23} {...props} />
   );
 };
 

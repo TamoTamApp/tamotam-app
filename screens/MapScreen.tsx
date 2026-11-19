@@ -1,6 +1,6 @@
+import { analytics, crashlytics } from "../helpers/firebase";
 import * as Location from "expo-location";
-import analytics from "@react-native-firebase/analytics";
-import crashlytics from "@react-native-firebase/crashlytics";
+
 import useColorScheme from "../hooks/useColorScheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../constants/Colors";
@@ -49,7 +49,7 @@ import { Modal } from "react-native";
 export default function MapScreen() {
 
   const colorScheme: ColorSchemeName = useColorScheme();
-  const dispatch: Dispatch<any> = useDispatch<Dispatch<any>>();
+  const dispatch: any = useDispatch();
   const events: Event[] = useSelector((state: any) => state.events.events);
   const internetState: NetInfoState = useNetInfo();
   const mapRef: MutableRefObject<null> = useRef<null>(null);
@@ -453,7 +453,7 @@ export default function MapScreen() {
     );
   };
 
-  const Map: () => JSX.Element = () => (
+  const Map: () => React.JSX.Element = () => (
     <>
       <View style={styles.centered}>
         <View style={styles.filterIconContainer}>

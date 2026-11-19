@@ -1,5 +1,6 @@
-import analytics from "@react-native-firebase/analytics";
-import crashlytics from "@react-native-firebase/crashlytics";
+
+
+import { analytics, crashlytics } from "../helpers/firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from "react-native";
 import { Event } from "../interfaces/event";
